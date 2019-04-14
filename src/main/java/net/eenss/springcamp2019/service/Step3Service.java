@@ -1,6 +1,6 @@
 package net.eenss.springcamp2019.service;
 
-import net.eenss.springcamp2019.configure.KafkaConfigure;
+import net.eenss.springcamp2019.configure.KafkaManager;
 import net.eenss.springcamp2019.repository.SomeRepository;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -17,10 +17,10 @@ import java.time.Duration;
 public class Step3Service {
     private static final Logger logger = LoggerFactory.getLogger(Step3Service.class);
 
-    private KafkaConfigure configure;
+    private KafkaManager configure;
     private SomeRepository repository;
 
-    public Step3Service(KafkaConfigure configure, SomeRepository repository) {
+    public Step3Service(KafkaManager configure, SomeRepository repository) {
         this.configure = configure;
         this.repository = repository;
     }

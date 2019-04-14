@@ -2,7 +2,6 @@ package net.eenss.springcamp2019.configure;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.reactivestreams.Publisher;
@@ -18,22 +17,21 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 import reactor.kafka.sender.SenderRecord;
 import reactor.kafka.sender.SenderResult;
-import reactor.util.function.Tuple2;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaConfigure {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaConfigure.class);
+public class KafkaManager {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaManager.class);
 
     private final String bootstrapServers;
     private final Map<String, Object> consumerProps;
     private final Map<String, Object> producerProps;
 
-    public KafkaConfigure() {
-        EmbeddedKafkaBroker broker = new EmbeddedKafkaBroker(1, false, 1, "topic-1");
+    public KafkaManager() {
+        EmbeddedKafkaBroker broker = new EmbeddedKafkaBroker(1, false, 1);
         broker.afterPropertiesSet();
 
         this.bootstrapServers = broker.getBrokersAsString();
