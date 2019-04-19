@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -20,12 +20,24 @@ public class DummyRepository implements SomeRepository {
 
     public DummyRepository() {
         this.receiverRule = Flux.just(
-                Tuples.of(3, "A"),
-                Tuples.of(5, "B"),
-                Tuples.of(7, "C"),
-                Tuples.of(11, "D"),
-                Tuples.of(13, "E")
+                Tuples.of(2, "막내"),
+                Tuples.of(3, "대리님"),
+                Tuples.of(4, "과장님"),
+                Tuples.of(5, "차장님"),
+                Tuples.of(6, "부장님")
         );
+    }
+
+    @Override
+    public Mono<Integer> saveItem(int item) {
+        final int delay = getRandomMilliSeconds();
+//        logger.info("Delay Times {} for saving Item - {}", delay, item);
+
+        return Mono.just(item)
+                .delayElement(Duration.ofMillis(delay))
+                .doOnNext(i -> logger.info("이벤트 [{}]의 발생 감지!", item));
+//        return Mono.delay(Duration.ofMillis(delay))
+//                .flatMap(l -> Mono.just(Integer.parseInt(item)));
     }
 
     @Override
@@ -44,24 +56,43 @@ public class DummyRepository implements SomeRepository {
     }
 
     @Override
-    public Mono<Tuple3<Integer, String, Boolean>> notify(Tuple2<Integer, String> notifyTarget) {
+    public Mono<Tuple2<String, Boolean>> notify(Tuple2<Integer, String> notifyTarget) {
         final int delay = getRandomMilliSeconds();
-        logger.info("Delay Times {} for notify Item - {}", delay, notifyTarget);
+        //logger.info("Delay Times {} for notify Item - {}", delay, notifyTarget);
 
-        return Mono.delay(Duration.ofMillis(delay))
-                .map(t -> Tuples.of(notifyTarget.getT1(), notifyTarget.getT2(), true));
+        return Mono.just(Tuples.of(notifyTarget.getT2(), true))
+                .delayElement(Duration.ofMillis(delay))
+                .doOnNext(t -> logger.info("[{}] 에게 이벤트 [{}] 발생을 알림!", notifyTarget.getT2(), notifyTarget.getT1()));
+        //return Mono.delay(Duration.ofMillis(delay))
+        //        .map(t -> Tuples.of(notifyTarget.getT2(), true));
     }
 
     @Override
-    public Mono<Boolean> saveResult(Tuple3<Integer, String, Boolean> result) {
+    public Mono<Tuple2<String, Boolean>> notifyMulti(Tuple2<List<Integer>, String> notifyTarget) {
         final int delay = getRandomMilliSeconds();
-        logger.info("Delay Times {} for saving Result - {}", delay, result);
+        //logger.info("Delay Times {} for notify Item - {}", delay, notifyTarget);
 
-        return Mono.delay(Duration.ofMillis(delay))
-                .map(t -> true);
+        return Mono.just(Tuples.of(notifyTarget.getT2(), true))
+                .delayElement(Duration.ofMillis(delay))
+                .doOnNext(t -> logger.info("[{}] 에게 이벤트 {} 발생을 알림!", notifyTarget.getT2(), notifyTarget.getT1()));
+
+        //return Mono.delay(Duration.ofMillis(delay))
+        //        .map(t -> Tuples.of(notifyTarget.getT2(), true));
+    }
+
+    @Override
+    public Mono<Boolean> saveResult(Tuple2<String, Boolean> result) {
+        final int delay = getRandomMilliSeconds();
+        //logger.info("Delay Times {} for saving Result - {}", delay, result);
+
+        return Mono.just(true)
+                .delayElement(Duration.ofMillis(delay))
+                .doOnNext(b -> logger.info("[{}] 에게 통지한 이력을 저장!", result.getT1()));
+        //return Mono.delay(Duration.ofMillis(delay))
+        //        .map(t -> true);
     }
 
     private int getRandomMilliSeconds() {
-        return new Random().ints(1000, 5000).findFirst().orElse(0);
+        return new Random().ints(500, 3000).findFirst().orElse(0);
     }
 }

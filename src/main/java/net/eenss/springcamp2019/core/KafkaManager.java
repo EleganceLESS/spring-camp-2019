@@ -1,4 +1,4 @@
-package net.eenss.springcamp2019.configure;
+package net.eenss.springcamp2019.core;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;

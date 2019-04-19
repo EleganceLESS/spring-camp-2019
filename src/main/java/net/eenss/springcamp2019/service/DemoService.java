@@ -1,6 +1,6 @@
 package net.eenss.springcamp2019.service;
 
-import net.eenss.springcamp2019.configure.KafkaManager;
+import net.eenss.springcamp2019.core.KafkaManager;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

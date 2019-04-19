@@ -1,6 +1,6 @@
 package net.eenss.springcamp2019.service;
 
-import net.eenss.springcamp2019.configure.KafkaManager;
+import net.eenss.springcamp2019.core.KafkaManager;
 import net.eenss.springcamp2019.repository.SomeRepository;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import reactor.kafka.sender.SenderRecord;
 import java.time.Duration;
 
 @Service
-public class Step2Service {
+public class Step2Service implements DemoService {
     private static final Logger logger = LoggerFactory.getLogger(Step2Service.class);
 
     private KafkaManager configure;
@@ -25,14 +25,43 @@ public class Step2Service {
         this.repository = repository;
     }
 
+    @Override
+    public Mono<String> start() {
+        return null;
+    }
+
+    @Override
+    public Mono<String> stop() {
+        return null;
+    }
+
+    @Override
+    public String getTopicName() {
+        return null;
+    }
+
+    @Override
+    public KafkaManager getKafkaManager() {
+        return null;
+    }
+
+    @Override
+    public Flux<Integer> generateSource() {
+        return null;
+    }
+
     public void consume() {
         configure.consumer("topic-2")
                 .flatMap(this::recordToMessage)
-                .flatMap(repository::saveItem)
-                .flatMap(repository::getReceivers)
-                .flatMap(repository::notify)
-                .flatMap(repository::saveResult)
-                .subscribe();
+                .groupBy(this::groupByKey)
+                .subscribe(groupedFlux ->
+                    groupedFlux.sampleFirst(Duration.ofSeconds(5))
+                            .flatMap(repository::saveItem)
+                            .flatMap(repository::getReceivers)
+                            .flatMap(repository::notify)
+                            .flatMap(repository::saveResult)
+                            .subscribe()
+                );
     }
 
     public void produce() {
@@ -47,5 +76,9 @@ public class Step2Service {
 
     private Mono<String> recordToMessage(ReceiverRecord<String, String> record) {
         return Mono.just(record.value());
+    }
+
+    private int groupByKey(final String s) {
+        return Integer.parseInt(s) % 10;
     }
 }
