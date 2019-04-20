@@ -26,13 +26,13 @@ public class Step2Service extends DemoService implements RecordProcessor, Delaye
     protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
         return consumerFlux.map(this::commitAndConvertToInteger)
                 .groupBy(Function.identity())
-                .subscribe(groupedFlux ->
+                .map(groupedFlux ->
                         groupedFlux.sampleFirst(Duration.ofSeconds(5))
                                 .flatMap(repository::saveItem)
                                 .flatMap(repository::getReceivers)
                                 .flatMap(repository::notify)
                                 .flatMap(repository::saveResult)
-                                .subscribe()
-                );
+                                .subscribe())
+                .subscribe();
     }
 }

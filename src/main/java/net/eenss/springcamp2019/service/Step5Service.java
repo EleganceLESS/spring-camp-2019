@@ -18,7 +18,7 @@ public class Step5Service extends DemoService implements RecordProcessor, Hundre
 
     @Override
     protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
-        Step5Subscriber subscriber = new Step5Subscriber(this::justTrueWithDelay);
+        Step5Subscriber subscriber = new Step5Subscriber(this::justTrueWithRandDelay);
 
         consumerFlux.subscribe(subscriber);
 

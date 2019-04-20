@@ -30,6 +30,12 @@ public interface RecordProcessor extends RandomNumberGenerator {
     default Mono<Boolean> justTrueWithDelay(ReceiverRecord<String, String> record) {
         logger.info("Consume START - {}", record.value());
         return Mono.just(true)
+                .delayElement(Duration.ofSeconds(1));
+    }
+
+    default Mono<Boolean> justTrueWithRandDelay(ReceiverRecord<String, String> record) {
+        logger.info("Consume START - {}", record.value());
+        return Mono.just(true)
                 .delayElement(Duration.ofMillis(getRandom(500, 1500)));
     }
 }

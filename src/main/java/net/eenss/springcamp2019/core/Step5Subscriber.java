@@ -39,7 +39,7 @@ public class Step5Subscriber extends BaseSubscriber<ReceiverRecord<String, Strin
 
     @Override
     protected void hookOnSubscribe(Subscription subscription) {
-        request(3);
+        request(5);
     }
 
     @Override
