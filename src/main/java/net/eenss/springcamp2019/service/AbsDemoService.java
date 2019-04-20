@@ -1,6 +1,7 @@
 package net.eenss.springcamp2019.service;
 
 import net.eenss.springcamp2019.core.KafkaManager;
+import net.eenss.springcamp2019.core.SourceFluxGenerator;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -8,7 +9,7 @@ import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.ReceiverRecord;
 import reactor.kafka.sender.SenderRecord;
 
-public abstract class AbsDemoService {
+public abstract class AbsDemoService implements SourceFluxGenerator {
 
     private String serviceName;
     private KafkaManager kafkaManager;
@@ -43,6 +44,4 @@ public abstract class AbsDemoService {
         kafkaManager.producer(records)
                 .subscribe();
     }
-
-    public abstract Flux<Integer> generateSource();
 }

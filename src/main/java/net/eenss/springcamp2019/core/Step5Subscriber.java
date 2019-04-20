@@ -32,6 +32,7 @@ public class Step5Subscriber extends BaseSubscriber<ReceiverRecord<String, Strin
     }
 
     private long commit(ReceiverRecord<String, String> record) {
+        logger.info("[COMMIT] {}", record.value());
         record.receiverOffset().acknowledge();
         return record.offset();
     }
@@ -46,6 +47,7 @@ public class Step5Subscriber extends BaseSubscriber<ReceiverRecord<String, Strin
         Mono.just(record)
                 .flatMap(runner)
                 .subscribe(r -> {
+                    logger.info("Consume END - {}", record.value());
                     offsetSink.next(record);
                     request(1);
                 });

@@ -7,5 +7,4 @@ public interface IntegerRecordReader {
         record.receiverOffset().acknowledge();
         return Integer.parseInt(record.value());
     }
-
 }

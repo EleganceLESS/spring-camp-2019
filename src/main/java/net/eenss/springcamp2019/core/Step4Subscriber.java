@@ -28,6 +28,7 @@ public class Step4Subscriber extends BaseSubscriber<ReceiverRecord<String, Strin
         Mono.just(record)
                 .flatMap(runner)
                 .subscribe(r -> {
+                    logger.info("[COMMIT] Consume END - {}", record.value());
                     record.receiverOffset().acknowledge();
                     request(1);
                 });

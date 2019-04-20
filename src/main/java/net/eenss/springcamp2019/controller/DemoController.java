@@ -1,18 +1,16 @@
 package net.eenss.springcamp2019.controller;
 
-import net.eenss.springcamp2019.service.DemoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.eenss.springcamp2019.service.AbsDemoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class DemoController {
-    private DemoService service;
+    private AbsDemoService service;
     private AtomicBoolean running;
 
-    public DemoController(DemoService service) {
+    public DemoController(AbsDemoService service) {
         this.service = service;
         this.running = new AtomicBoolean(false);
     }

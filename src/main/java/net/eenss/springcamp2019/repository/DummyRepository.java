@@ -1,5 +1,6 @@
 package net.eenss.springcamp2019.repository;
 
+import net.eenss.springcamp2019.core.RandomNumberGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 @Component
-public class DummyRepository implements SomeRepository {
+public class DummyRepository implements SomeRepository, RandomNumberGenerator {
     private static final Logger logger = LoggerFactory.getLogger(DummyRepository.class);
 
     private Flux<Tuple2<Integer, String>> receiverRule;
@@ -93,6 +94,6 @@ public class DummyRepository implements SomeRepository {
     }
 
     private int getRandomMilliSeconds() {
-        return new Random().ints(500, 3000).findFirst().orElse(0);
+        return getRandom(500, 3000);
     }
 }
