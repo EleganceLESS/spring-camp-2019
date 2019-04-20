@@ -6,54 +6,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import reactor.kafka.receiver.ReceiverRecord;
 
 @Service
-public class Step0Service implements DemoService {
+public class Step0Service extends AbsDemoService {
     private static final Logger logger = LoggerFactory.getLogger(Step0Service.class);
 
-    private KafkaManager kafkaManager;
-    private Disposable disposable;
-
     public Step0Service(KafkaManager kafkaManager) {
-        this.kafkaManager = kafkaManager;
+        super("step-0", kafkaManager);
     }
 
     @Override
-    public Mono<String> start() {
-        consume();
-        produce();
-        return Mono.just("START");
-    }
-
-    @Override
-    public Mono<String> stop() {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-        return Mono.just("STOP");
-    }
-
-    public void consume() {
-        disposable = kafkaManager.consumer("topic-0")
-                .doOnSubscribe(s -> logger.info("Consumer doOnSubscribe"))
-                .doOnCancel(() -> logger.info("Consumer doOnCancel"))
-                .doOnComplete(() -> logger.info("Consumer doOnComplete"))
-                .subscribe(r -> logger.info("CONSUMER) [{}] {}:{}", r.offset(), r.key(), r.value()));
-    }
-
-    @Override
-    public String getTopicName() {
-        return "topic-0";
-    }
-
-    @Override
-    public KafkaManager getKafkaManager() {
-        return kafkaManager;
+    protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
+        return consumerFlux.subscribe(r -> {
+            r.receiverOffset().acknowledge();
+            logger.info("Read - {}", r.value());
+        });
     }
 
     @Override
     public Flux<Integer> generateSource() {
-        return Flux.range(1, 100);
+        return Flux.range(1, 100)
+                .doOnNext(i -> logger.info("Create - {}", i));
     }
 }
