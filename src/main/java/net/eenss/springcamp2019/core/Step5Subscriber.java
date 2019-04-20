@@ -24,9 +24,8 @@ public class Step5Subscriber extends BaseSubscriber<ReceiverRecord<String, Strin
 
         this.offsetProcessor.publish()
                 .autoConnect()
-                .reduce(-1L, (last, r) -> last < r.offset()
-                        ? commit(r)
-                        : last
+                .reduce(-1L, (last, r) ->
+                        last < r.offset() ? commit(r) : last
                 )
                 .subscribe();
     }

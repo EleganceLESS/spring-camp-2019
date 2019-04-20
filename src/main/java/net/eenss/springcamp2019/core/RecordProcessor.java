@@ -12,9 +12,10 @@ import java.time.Duration;
 public interface RecordProcessor extends RandomNumberGenerator {
     Logger logger = LoggerFactory.getLogger(RecordProcessor.class);
 
-    default void commit(ReceiverRecord<String, String> record) {
+    default Boolean commit(ReceiverRecord<String, String> record) {
         logger.info("Read - {}", record.value());
         record.receiverOffset().acknowledge();
+        return true;
     }
 
     default Integer commitAndConvertToInteger(ReceiverRecord<String, String> record) {
@@ -36,6 +37,6 @@ public interface RecordProcessor extends RandomNumberGenerator {
     default Mono<Boolean> justTrueWithRandDelay(ReceiverRecord<String, String> record) {
         logger.info("Consume START - {}", record.value());
         return Mono.just(true)
-                .delayElement(Duration.ofMillis(getRandom(500, 1500)));
+                .delayElement(Duration.ofMillis(getRandomRange(500, 1500)));
     }
 }

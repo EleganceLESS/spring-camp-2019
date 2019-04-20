@@ -71,6 +71,6 @@ public class DummyRepository implements SomeRepository, RandomNumberGenerator {
     }
 
     private int getRandomMilliSeconds() {
-        return getRandom(500, 3000);
+        return getRandomRange(500, 3000);
     }
 }
