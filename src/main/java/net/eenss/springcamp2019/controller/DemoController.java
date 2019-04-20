@@ -1,16 +1,16 @@
 package net.eenss.springcamp2019.controller;
 
-import net.eenss.springcamp2019.service.AbsDemoService;
+import net.eenss.springcamp2019.service.DemoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class DemoController {
-    private AbsDemoService service;
+    private DemoService service;
     private AtomicBoolean running;
 
-    public DemoController(AbsDemoService service) {
+    public DemoController(DemoService service) {
         this.service = service;
         this.running = new AtomicBoolean(false);
     }

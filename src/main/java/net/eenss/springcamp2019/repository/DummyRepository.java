@@ -11,7 +11,6 @@ import reactor.util.function.Tuples;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 
 @Component
 public class DummyRepository implements SomeRepository, RandomNumberGenerator {
@@ -32,22 +31,10 @@ public class DummyRepository implements SomeRepository, RandomNumberGenerator {
     @Override
     public Mono<Integer> saveItem(int item) {
         final int delay = getRandomMilliSeconds();
-//        logger.info("Delay Times {} for saving Item - {}", delay, item);
 
         return Mono.just(item)
                 .delayElement(Duration.ofMillis(delay))
                 .doOnNext(i -> logger.info("이벤트 [{}]의 발생 감지!", item));
-//        return Mono.delay(Duration.ofMillis(delay))
-//                .flatMap(l -> Mono.just(Integer.parseInt(item)));
-    }
-
-    @Override
-    public Mono<Integer> saveItem(String item) {
-        final int delay = getRandomMilliSeconds();
-        logger.info("Delay Times {} for saving Item - {}", delay, item);
-
-        return Mono.delay(Duration.ofMillis(delay))
-                .flatMap(l -> Mono.just(Integer.parseInt(item)));
     }
 
     @Override
@@ -59,38 +46,28 @@ public class DummyRepository implements SomeRepository, RandomNumberGenerator {
     @Override
     public Mono<Tuple2<String, Boolean>> notify(Tuple2<Integer, String> notifyTarget) {
         final int delay = getRandomMilliSeconds();
-        //logger.info("Delay Times {} for notify Item - {}", delay, notifyTarget);
 
         return Mono.just(Tuples.of(notifyTarget.getT2(), true))
                 .delayElement(Duration.ofMillis(delay))
                 .doOnNext(t -> logger.info("[{}] 에게 이벤트 [{}] 발생을 알림!", notifyTarget.getT2(), notifyTarget.getT1()));
-        //return Mono.delay(Duration.ofMillis(delay))
-        //        .map(t -> Tuples.of(notifyTarget.getT2(), true));
     }
 
     @Override
     public Mono<Tuple2<String, Boolean>> notifyMulti(Tuple2<List<Integer>, String> notifyTarget) {
         final int delay = getRandomMilliSeconds();
-        //logger.info("Delay Times {} for notify Item - {}", delay, notifyTarget);
 
         return Mono.just(Tuples.of(notifyTarget.getT2(), true))
                 .delayElement(Duration.ofMillis(delay))
                 .doOnNext(t -> logger.info("[{}] 에게 이벤트 {} 발생을 알림!", notifyTarget.getT2(), notifyTarget.getT1()));
-
-        //return Mono.delay(Duration.ofMillis(delay))
-        //        .map(t -> Tuples.of(notifyTarget.getT2(), true));
     }
 
     @Override
     public Mono<Boolean> saveResult(Tuple2<String, Boolean> result) {
         final int delay = getRandomMilliSeconds();
-        //logger.info("Delay Times {} for saving Result - {}", delay, result);
 
         return Mono.just(true)
                 .delayElement(Duration.ofMillis(delay))
                 .doOnNext(b -> logger.info("[{}] 에게 통지한 이력을 저장!", result.getT1()));
-        //return Mono.delay(Duration.ofMillis(delay))
-        //        .map(t -> true);
     }
 
     private int getRandomMilliSeconds() {
