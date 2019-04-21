@@ -8,9 +8,24 @@
         </layout>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/reactor-kafka.log</file>
+        <append>true</append>
+        <!-- set immediateFlush to false for much higher logging throughput -->
+        <immediateFlush>true</immediateFlush>
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="net.eenss" level="info">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
     </logger>
+
+
 <!--
     <root level="error">
         <appender-ref ref="CONSOLE"/>
