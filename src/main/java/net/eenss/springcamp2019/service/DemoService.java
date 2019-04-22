@@ -29,11 +29,15 @@ public abstract class DemoService implements SourceFluxGenerator {
     }
 
     public Mono<String> stop() {
+        dispose(disposable);
+
+        return Mono.just("STOP");
+    }
+
+    protected void dispose(Disposable disposable) {
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
-
-        return Mono.just("STOP");
     }
 
     protected abstract void consume();

@@ -5,9 +5,7 @@ import net.eenss.springcamp2019.core.KafkaManager;
 import net.eenss.springcamp2019.core.RecordProcessor;
 import net.eenss.springcamp2019.core.Step5Subscriber;
 import org.springframework.stereotype.Service;
-import reactor.core.Disposable;
 import reactor.core.publisher.BaseSubscriber;
-import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.ReceiverRecord;
 
 @Service

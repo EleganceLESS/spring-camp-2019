@@ -31,9 +31,7 @@ public class Step3Service extends OperatorDemoService<Disposable> implements Rec
 
     @Override
     public Mono<String> stop() {
-        if (subDisposable != null && !subDisposable.isDisposed()) {
-            subDisposable.dispose();
-        }
+        dispose(subDisposable);
 
         return super.stop();
     }
