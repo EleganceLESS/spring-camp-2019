@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.function.Function;
 
 @Service
-public class Step2Service extends DemoService implements RecordProcessor, DelayedRepeatTenGenerator {
+public class Step2Service extends OperatorDemoService<Disposable> implements RecordProcessor, DelayedRepeatTenGenerator {
 
     private SomeRepository repository;
 
@@ -23,7 +23,7 @@ public class Step2Service extends DemoService implements RecordProcessor, Delaye
     }
 
     @Override
-    protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
+    protected Flux<Disposable> consumer(Flux<ReceiverRecord<String, String>> consumerFlux) {
         return consumerFlux.map(this::commitAndConvertToInteger)
                 .groupBy(Function.identity())
                 .map(groupedFlux ->
@@ -32,7 +32,7 @@ public class Step2Service extends DemoService implements RecordProcessor, Delaye
                                 .flatMap(repository::getReceivers)
                                 .flatMap(repository::notify)
                                 .flatMap(repository::saveResult)
-                                .subscribe())
-                .subscribe();
+                                .subscribe());
     }
+
 }

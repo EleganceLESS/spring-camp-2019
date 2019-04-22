@@ -18,16 +18,14 @@ import java.time.Duration;
 import java.util.function.Function;
 
 @Service
-public class Step3Service extends DemoService implements RecordProcessor, DelayedRepeatTenGenerator {
+public class Step3Service extends OperatorDemoService<Disposable> implements RecordProcessor, DelayedRepeatTenGenerator {
 
     private SomeRepository repository;
 
-    private KafkaManager kafkaManager;
     private Disposable subDisposable;
 
     public Step3Service(KafkaManager kafkaManager, SomeRepository repository) {
         super("step-3", kafkaManager);
-        this.kafkaManager = kafkaManager;
         this.repository = repository;
     }
 
@@ -41,21 +39,21 @@ public class Step3Service extends DemoService implements RecordProcessor, Delaye
     }
 
     @Override
-    protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
+    protected Flux<Disposable> consumer(Flux<ReceiverRecord<String, String>> consumerFlux) {
         subDisposable = kafkaManager.consumer("step-3-2")
                 .map(this::commitAndConvertToTuple)
                 .groupBy(Tuple2::getT1)
-                .subscribe(groupedFlux ->
+                .map(groupedFlux ->
                         groupedFlux.map(Tuple2::getT2)
                                 .buffer(Duration.ofSeconds(10))
                                 .flatMap(list -> repository.notifyMulti(Tuples.of(list, groupedFlux.key())))
                                 .flatMap(repository::saveResult)
-                                .subscribe()
-                );
+                                .subscribe())
+                .subscribe();
 
         return consumerFlux.map(this::commitAndConvertToInteger)
                 .groupBy(Function.identity())
-                .subscribe(groupedFlux ->
+                .map(groupedFlux ->
                         groupedFlux.sampleFirst(Duration.ofSeconds(5))
                                 .flatMap(repository::saveItem)
                                 .flatMap(repository::getReceivers)
@@ -65,7 +63,6 @@ public class Step3Service extends DemoService implements RecordProcessor, Delaye
                                                 t.getT1().toString()
                                         ))
                                 ))
-                                .subscribe()
-                );
+                                .subscribe());
     }
 }

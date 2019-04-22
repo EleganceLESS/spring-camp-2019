@@ -5,12 +5,11 @@ import net.eenss.springcamp2019.core.KafkaManager;
 import net.eenss.springcamp2019.core.RecordProcessor;
 import net.eenss.springcamp2019.repository.SomeRepository;
 import org.springframework.stereotype.Service;
-import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.ReceiverRecord;
 
 @Service
-public class Step1Service extends DemoService implements RecordProcessor, DelayedRepeatTenGenerator {
+public class Step1Service extends OperatorDemoService<Boolean> implements RecordProcessor, DelayedRepeatTenGenerator {
 
     private SomeRepository repository;
 
@@ -20,12 +19,11 @@ public class Step1Service extends DemoService implements RecordProcessor, Delaye
     }
 
     @Override
-    protected Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux) {
+    protected Flux<Boolean> consumer(Flux<ReceiverRecord<String, String>> consumerFlux) {
         return consumerFlux.map(this::commitAndConvertToInteger)
                 .flatMap(repository::saveItem)
                 .flatMap(repository::getReceivers)
                 .flatMap(repository::notify)
-                .flatMap(repository::saveResult)
-                .subscribe();
+                .flatMap(repository::saveResult);
     }
 }

@@ -8,15 +8,14 @@ import org.slf4j.LoggerFactory;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.kafka.receiver.ReceiverRecord;
 import reactor.kafka.sender.SenderRecord;
 
 public abstract class DemoService implements SourceFluxGenerator {
     private static final Logger logger = LoggerFactory.getLogger(DemoService.class);
 
-    private String serviceName;
-    private KafkaManager kafkaManager;
-    private Disposable disposable;
+    KafkaManager kafkaManager;
+    Disposable disposable;
+    String serviceName;
 
     public DemoService(String serviceName, KafkaManager kafkaManager) {
         this.serviceName = serviceName;
@@ -24,7 +23,7 @@ public abstract class DemoService implements SourceFluxGenerator {
     }
 
     public Mono<String> start() {
-        disposable = consume(kafkaManager.consumer(serviceName));
+        consume();
         produce();
         return Mono.just("START");
     }
@@ -37,7 +36,7 @@ public abstract class DemoService implements SourceFluxGenerator {
         return Mono.just("STOP");
     }
 
-    protected abstract Disposable consume(Flux<ReceiverRecord<String, String>> consumerFlux);
+    protected abstract void consume();
 
     private void produce() {
         final Flux<SenderRecord<String, String, String>> records = generateSource()
