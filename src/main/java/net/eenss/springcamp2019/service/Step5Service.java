@@ -9,7 +9,7 @@ import reactor.core.publisher.BaseSubscriber;
 import reactor.kafka.receiver.ReceiverRecord;
 
 @Service
-public class Step5Service extends SubscriberDemoService implements RecordProcessor, HundredGenerator {
+public class Step5Service extends SubscriberDemoService implements RecordProcessor {
 
     public Step5Service(KafkaManager kafkaManager) {
         super("step-5", kafkaManager);

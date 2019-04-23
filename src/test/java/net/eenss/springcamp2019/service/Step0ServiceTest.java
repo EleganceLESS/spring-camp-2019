@@ -36,5 +36,24 @@ public class Step0ServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    public void consumerTest() {
+        ReceiverOffset offset = mock(ReceiverOffset.class);
+        doNothing().when(offset).acknowledge();
 
+        ReceiverRecord<String, String> record1 = mock(ReceiverRecord.class);
+        when(record1.key()).thenReturn("1");
+        when(record1.value()).thenReturn("1");
+        when(record1.receiverOffset()).thenReturn(offset);
+
+        ReceiverRecord<String, String> record2 = mock(ReceiverRecord.class);
+        when(record2.key()).thenReturn("2");
+        when(record2.value()).thenReturn("2");
+        when(record2.receiverOffset()).thenReturn(offset);
+
+        Step0Service service = new Step0Service(null);
+        StepVerifier.create(service.consumer(Flux.just(record1, record2)))
+                .expectNext(true, true)
+                .verifyComplete();
+    }
 }

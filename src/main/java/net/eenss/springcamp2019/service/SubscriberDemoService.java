@@ -1,10 +1,11 @@
 package net.eenss.springcamp2019.service;
 
+import net.eenss.springcamp2019.core.HundredGenerator;
 import net.eenss.springcamp2019.core.KafkaManager;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.kafka.receiver.ReceiverRecord;
 
-public abstract class SubscriberDemoService extends DemoService {
+public abstract class SubscriberDemoService extends DemoService implements HundredGenerator {
 
     public SubscriberDemoService(String serviceName, KafkaManager kafkaManager) {
         super(serviceName, kafkaManager);
