@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.function.Function;
 
 @Service
-public class Step2Service extends OperatorDemoService<Flux<Boolean>> implements RecordProcessor, DelayedRepeatTenGenerator {
+public class Step2Service extends OperatorDemoService<Boolean> implements RecordProcessor, DelayedRepeatTenGenerator {
 
     private SomeRepository repository;
 
@@ -23,18 +23,17 @@ public class Step2Service extends OperatorDemoService<Flux<Boolean>> implements 
     }
 
     @Override
-    protected Flux<Flux<Boolean>> consumer(Flux<ReceiverRecord<String, String>> consumerFlux) {
+    protected Flux<Boolean> consumer(Flux<ReceiverRecord<String, String>> consumerFlux) {
         return consumerFlux.map(this::commitAndConvertToInteger)
                 .groupBy(Function.identity())
-                .map(this::sampling)
-                .doOnNext(Flux::subscribe);
-    }
-
-    protected Flux<Boolean> sampling(GroupedFlux<Integer, Integer> groupedFlux) {
-        return groupedFlux.sampleFirst(Duration.ofSeconds(5))
+                .flatMap(this::sampling)
                 .flatMap(repository::saveItem)
                 .flatMap(repository::getReceivers)
                 .flatMap(repository::notify)
                 .flatMap(repository::saveResult);
+    }
+
+    protected Flux<Integer> sampling(GroupedFlux<Integer, Integer> groupedFlux) {
+        return groupedFlux.sampleFirst(Duration.ofSeconds(5));
     }
 }

@@ -1,6 +1,5 @@
 package net.eenss.springcamp2019.service;
 
-import net.eenss.springcamp2019.core.HundredGenerator;
 import net.eenss.springcamp2019.core.KafkaManager;
 import net.eenss.springcamp2019.core.RecordProcessor;
 import net.eenss.springcamp2019.core.Step4Subscriber;
@@ -9,7 +8,7 @@ import reactor.core.publisher.BaseSubscriber;
 import reactor.kafka.receiver.ReceiverRecord;
 
 @Service
-public class Step4Service extends SubscriberDemoService implements RecordProcessor, HundredGenerator {
+public class Step4Service extends SubscriberDemoService implements RecordProcessor {
 
     public Step4Service(KafkaManager kafkaManager) {
         super("step-4", kafkaManager);

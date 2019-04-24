@@ -2,6 +2,7 @@ package net.eenss.springcamp2019.service;
 
 import net.eenss.springcamp2019.core.KafkaManager;
 import org.junit.Test;
+import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.ReceiverOffset;
 import reactor.kafka.receiver.ReceiverRecord;
