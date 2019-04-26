@@ -26,43 +26,43 @@ public class DummyRepositoryTest {
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(2))
-                .expectNext(Tuples.of(2, "막내"))
+                .expectNext(Tuples.of(2, "조조"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(3))
-                .expectNext(Tuples.of(3, "대리님"))
+                .expectNext(Tuples.of(3, "유비"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(4))
-                .expectNext(Tuples.of(4, "막내"))
-                .expectNext(Tuples.of(4, "과장님"))
+                .expectNext(Tuples.of(4, "조조"))
+                .expectNext(Tuples.of(4, "손권"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(5))
-                .expectNext(Tuples.of(5, "차장님"))
+                .expectNext(Tuples.of(5, "원소"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(6))
-                .expectNext(Tuples.of(6, "막내"))
-                .expectNext(Tuples.of(6, "대리님"))
-                .expectNext(Tuples.of(6, "부장님"))
+                .expectNext(Tuples.of(6, "조조"))
+                .expectNext(Tuples.of(6, "유비"))
+                .expectNext(Tuples.of(6, "여포"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(7))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(8))
-                .expectNext(Tuples.of(8, "막내"))
-                .expectNext(Tuples.of(8, "과장님"))
+                .expectNext(Tuples.of(8, "조조"))
+                .expectNext(Tuples.of(8, "손권"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(9))
-                .expectNext(Tuples.of(9, "대리님"))
+                .expectNext(Tuples.of(9, "유비"))
                 .verifyComplete();
 
         StepVerifier.create(repository.getReceivers(10))
-                .expectNext(Tuples.of(10, "막내"))
-                .expectNext(Tuples.of(10, "차장님"))
+                .expectNext(Tuples.of(10, "조조"))
+                .expectNext(Tuples.of(10, "원소"))
                 .verifyComplete();
     }
 

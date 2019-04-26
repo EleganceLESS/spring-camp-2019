@@ -20,11 +20,11 @@ public class DummyRepository implements SomeRepository, RandomNumberGenerator {
 
     public DummyRepository() {
         this.receiverRule = Flux.just(
-                Tuples.of(2, "막내"),
-                Tuples.of(3, "대리님"),
-                Tuples.of(4, "과장님"),
-                Tuples.of(5, "차장님"),
-                Tuples.of(6, "부장님")
+                Tuples.of(2, "조조"),
+                Tuples.of(3, "유비"),
+                Tuples.of(4, "손권"),
+                Tuples.of(5, "원소"),
+                Tuples.of(6, "여포")
         );
     }
 

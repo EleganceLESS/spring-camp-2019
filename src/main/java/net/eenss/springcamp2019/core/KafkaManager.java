@@ -7,8 +7,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOptions;
@@ -22,19 +22,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+@Component
 public class KafkaManager {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaManager.class);
 
-    private final String bootstrapServers;
     private final Map<String, Object> consumerProps;
     private final Map<String, Object> producerProps;
 
     public KafkaManager() {
-        EmbeddedKafkaBroker broker = new EmbeddedKafkaBroker(1, false, 1);
+        final EmbeddedKafkaBroker broker = new EmbeddedKafkaBroker(1, false, 1);
         broker.afterPropertiesSet();
 
-        this.bootstrapServers = broker.getBrokersAsString();
+        final String bootstrapServers = broker.getBrokersAsString();
 
         this.consumerProps = new HashMap<>();
         this.consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -53,9 +51,7 @@ public class KafkaManager {
     }
 
     public Flux<ReceiverRecord<String, String>> consumer(final String topic) {
-        ReceiverOptions<String, String> options = ReceiverOptions.<String, String>create(consumerProps)
-                .addAssignListener(parts -> logger.info("AssignListeners {}", parts))
-                .addRevokeListener(parts -> logger.info("RevokeListeners {}", parts))
+        final ReceiverOptions<String, String> options = ReceiverOptions.<String, String>create(consumerProps)
                 .subscription(Collections.singleton(topic));
 
         return KafkaReceiver.create(options)
@@ -63,7 +59,7 @@ public class KafkaManager {
     }
 
     public Flux<SenderResult<String>> producer(final Publisher<? extends SenderRecord<String, String, String>> publisher) {
-        SenderOptions<String, String> options = SenderOptions.create(producerProps);
+        final SenderOptions<String, String> options = SenderOptions.create(producerProps);
 
         return KafkaSender.create(options)
                 .send(publisher);

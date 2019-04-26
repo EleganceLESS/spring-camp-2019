@@ -28,15 +28,18 @@ public interface RecordProcessor extends RandomNumberGenerator {
         return Tuples.of(record.key(), Integer.parseInt(record.value()));
     }
 
-    default Mono<Boolean> justTrueWithDelay(ReceiverRecord<String, String> record) {
+    default Mono<Boolean> justTrue(ReceiverRecord<String, String> record) {
         logger.info("Consume START - {}", record.value());
-        return Mono.just(true)
+        return Mono.just(true);
+    }
+
+    default Mono<Boolean> justTrueWithDelay(ReceiverRecord<String, String> record) {
+        return justTrue(record)
                 .delayElement(Duration.ofSeconds(1));
     }
 
     default Mono<Boolean> justTrueWithRandDelay(ReceiverRecord<String, String> record) {
-        logger.info("Consume START - {}", record.value());
-        return Mono.just(true)
+        return justTrue(record)
                 .delayElement(Duration.ofMillis(getRandomRange(500, 1500)));
     }
 }

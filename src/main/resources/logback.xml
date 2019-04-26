@@ -25,10 +25,4 @@
         <appender-ref ref="FILE"/>
     </logger>
 
-
-<!--
-    <root level="error">
-        <appender-ref ref="CONSOLE"/>
-    </root>
--->
 </configuration>
